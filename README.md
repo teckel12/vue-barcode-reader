@@ -4,7 +4,9 @@
 
 A Vue.js set of components to scan (or upload images) barcodes and QR codes.
 
-This fork fixes a library version issue and adds the ability to activate the torch (camera flash).  Both yield much better barcode scanning speed and accuracy.
+## Changes in this fork
+
+Fixes a library version issue and adds the ability to activate the torch (camera flash).  Both yield much better barcode scanning speed and accuracy.
 
 ## Benefits
 
