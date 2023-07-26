@@ -1,12 +1,18 @@
 # Vue Barcode and QR code scanner
 
-[![npm version](https://badgen.net/npm/v/vue-barcode-reader)](https://www.npmjs.com/package/vue-barcode-reader)
+[![npm version](https://badgen.net/npm/v/@teckel/vue-barcode-reader)](https://www.npmjs.com/package/@teckel/vue-barcode-reader)
 
 A Vue.js set of components to scan (or upload images) barcodes and QR codes.
 
 ## Changes in this fork
 
-Fixes a library version issue and adds the ability to activate the torch (camera flash).  Both yield much better barcode scanning speed and accuracy.
+* Fixes ZXing library version issue causing scanning to be very slow
+* On startup, the library searches all available rear-facing cameras to find the most ideal camera for barcode scanning, preferrably one with torch (flash) and autofocus.
+* Adds the ability to activate the torch (camera flash), which can yield higher barcode scanning speed and accuracy.
+* Ability to set orientation to landscape mode, this can also increase the scanning speed and accuracy as there's more pixels in the landscape orientation.
+* Ability to control the camera zoom (if camera device reports the user is allowed to set the zoom).
+* Ability to switch between autofocus and manual focus mode (defaults to autofocus mode if available).
+* Ability to set the focus distance (if in manual focus mode and camera device supports the feature).
 
 ## Benefits
 
@@ -75,49 +81,50 @@ methods: { onDecode (result) { console.log(result) } }
 
 ## Props
 
-The library supports the following props:
+> Props will only work if the camera reports that the feature is supported.  Some camera devices and some platforms either don't allow setting constraints or don't report the feature exists.  Chrome on Android work quite well, while (as expected) iOS and Safari don't support most/all features.
 
-### torch (if supported by camera)
+### torch
 
-Activate the torch (flash), can be set with simply `torch` or controlled via `:torch="torch"`
+Activate the torch (flash). Can be set with simply `torch` or controlled via `:torch="torch"`.
 
-### zoom (if supported by camera)
+### zoom
 
-Set the zoom value (min/max/step available in `hasZoom` emitted value)
+Set the zoom value (min/max/step available in `hasZoom` emitted value).
 
-### autoFocus (if supported by camera)
+### landscape
 
-Defaults to `true`, but setting `:auto-focus="false"` turns off auto focus
+Set the browser to landscape orientation.  In order to set landscape mode, the browser will first switch to fullscreen mode (this is required to force landscape mode).
 
-### focusDistance (if supported by camera)
+### autofocus
 
-Set the focus distance (min/max/step available in `hasFocusDistance` emited value)
+Defaults to `true`, but setting `:autofocus="false"` turns off autofocus (manual focus).
 
+### focusDistance
+
+> Must have `:autofocus="false"` (turning off autofocus and turning on manual focus) for focusDistance to work.
+
+Set the focus distance (min/max/step available in `hasFocusDistance` emited value).
 
 ## Emitted values
 
-The library supports the following emitted values:
-
 ### hasTorch
 
-Returns `true` or `false` if camera is capable of activating the torch (flash)
+Returns `true` or `false` if camera device reports it's capable of activating the torch (flash).
 
-### hasAutoFocus
+### hasAutofocus
 
-Returns `true` or `false` if camera is capable of auto focus
+Returns `true` or `false` if camera device reports it's capable of autofocus mode.
 
 ### hasZoom
 
-Returns `false` or object containing `min`, `max`, `step`
+Returns `false` or object containing `min`, `max`, `step` set from the supported camera decice.
 
 ### hasFocusDistance
 
-Returns `false` or object containing `min`, `max`, `step`
+Returns `false` or object containing `min`, `max`, `step` set from the supported camera decice.
 
 
 ## Events
-
-The library emits the following events:
 
 ### loaded
 
