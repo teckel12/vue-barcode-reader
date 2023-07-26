@@ -1,6 +1,6 @@
 # Vue Barcode and QR code scanner
 
-[![npm version](https://badgen.net/npm/v/@teckel/vue-barcode-reader)](https://www.npmjs.com/package/@teckel/vue-barcode-reader)
+[![npm version](https://badgen.net/npm/v/@teckel/vue-barcode-reader/1.0.4)](https://www.npmjs.com/package/@teckel/vue-barcode-reader)
 
 A Vue.js set of components to scan (or upload images) barcodes and QR codes.
 
