@@ -15,7 +15,7 @@ import { BrowserMultiFormatReader, Exception } from '@zxing/library'
 
 export default {
   name: 'stream-barcode-reader',
-  emits: ['loaded', 'decode', 'result', 'update:hasTorch', 'update:hasZoom', 'update:hasAutoFocus', 'update:hasFocusDistance'],
+  emits: ['loaded', 'decode', 'result', 'update:hasTorch', 'update:hasZoom', 'update:hasAutofocus', 'update:hasFocusDistance'],
 
   props: {
     torch: {
@@ -26,7 +26,7 @@ export default {
       type: Number,
       default: 1,
     },
-    autoFocus: {
+    autofocus: {
       type: Boolean,
       default: true,
     },
@@ -56,7 +56,7 @@ export default {
     hasZoom() {
       return this.idealDevice?.zoom ? this.idealDevice.zoom : false
     },
-    hasAutoFocus() {
+    hasAutofocus() {
       return !!this.idealDevice?.focusMode?.includes('continuous')
     },
     hasFocusDistance() {
@@ -75,13 +75,13 @@ export default {
         this.applyCameraConstraints()
       }
     },
-    autoFocus() {
-      if (this.hasAutoFocus) {
+    autofocus() {
+      if (this.hasAutofocus) {
         this.applyCameraConstraints()
       }
     },
     focusDistance() {
-      if (!this.autoFocus) {
+      if (!this.autofocus) {
         this.applyCameraConstraints()
       }
     },
@@ -207,7 +207,7 @@ export default {
           this.$emit('loaded')
           this.$emit('update:hasTorch', this.hasTorch)
           this.$emit('update:hasZoom', this.hasZoom)
-          this.$emit('update:hasAutoFocus', this.hasAutoFocus)
+          this.$emit('update:hasAutofocus', this.hasAutofocus)
           this.$emit('update:hasFocusDistance', this.hasFocusDistance)
 
           // Finally, turn on features as available and requested
@@ -221,8 +221,8 @@ export default {
       const advanced = {}
       if (this.hasTorch) advanced.torch = this.torch
       if (this.hasZoom) advanced.zoom = Math.min(Math.max(this.idealDevice.zoom.min, this.zoom), this.idealDevice.zoom.max)
-      if (this.hasAutoFocus) advanced.focusMode = this.autoFocus ? 'continuous' : 'manual'
-      if (!this.autoFocus && this.hasFocusDistance) advanced.focusDistance = Math.min(Math.max(this.idealDevice.focusDistance.min, this.focusDistance), this.idealDevice.focusDistance.max)
+      if (this.hasAutofocus) advanced.focusMode = this.autofocus ? 'continuous' : 'manual'
+      if (!this.autofocus && this.hasFocusDistance) advanced.focusDistance = Math.min(Math.max(this.idealDevice.focusDistance.min, this.focusDistance), this.idealDevice.focusDistance.max)
       this.$refs.scanner?.srcObject?.getVideoTracks()[0]?.applyConstraints({
         advanced: [advanced]
       }).catch(() => {})
