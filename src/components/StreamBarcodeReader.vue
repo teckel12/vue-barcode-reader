@@ -101,7 +101,6 @@ export default {
     }
 
     this.idealDevice = JSON.parse(localStorage.getItem('vue-barcode-reader-ideal') || '{}')
-    // alert(JSON.stringify(this.idealDevice))
 
     if (this.landscape) {
       this.fullscreenLandscape()
@@ -260,7 +259,6 @@ video {
   width: 100%;
   height: 100%;
   background: rgba(30, 30, 30, 0.5);
-  -webkit-clip-path: polygon(0% 0%, 0% 100%, 20% 100%, 20% 20%, 80% 20%, 80% 80%, 20% 80%, 20% 100%, 100% 100%, 100% 0%);
   clip-path: polygon(0% 0%, 0% 100%, 20% 100%, 20% 20%, 80% 20%, 80% 80%, 20% 80%, 20% 100%, 100% 100%, 100% 0%);
 }
 
