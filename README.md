@@ -4,7 +4,7 @@
 
 A Vue.js set of components to scan (or upload images) barcodes and QR codes.
 
-## Changes in this fork
+## Enhancements in this fork
 
 * Fixes ZXing library version issue causing scanning to be very slow
 * On startup, the library searches all available rear-facing cameras to find the most ideal camera for barcode scanning, preferrably one with torch (flash) and autofocus.
