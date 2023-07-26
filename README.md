@@ -79,6 +79,7 @@ In your template you can use this syntax:
 methods: { onDecode (result) { console.log(result) } }
 ```
 
+
 ## Props
 
 > Props will only work if the camera reports that the feature is supported.  Some camera devices and some platforms either don't allow setting constraints or don't report the feature exists.  Chrome on Android work quite well, while (as expected) iOS and Safari don't support most/all features.
@@ -104,6 +105,7 @@ Defaults to `true`, but setting `:autofocus="false"` turns off autofocus (manual
 > Must have `:autofocus="false"` (turning off autofocus and turning on manual focus) for focusDistance to work.
 
 Set the focus distance (min/max/step available in `hasFocusDistance` emited value).
+
 
 ## Emitted values
 
