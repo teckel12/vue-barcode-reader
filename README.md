@@ -1,18 +1,19 @@
 # Vue Barcode and QR code scanner
 
-[![npm version](https://badgen.net/npm/v/@teckel/vue-barcode-reader/1.0.4)](https://www.npmjs.com/package/@teckel/vue-barcode-reader)
+[![npm version](https://badgen.net/npm/v/@teckel/vue-barcode-reader)](https://www.npmjs.com/package/@teckel/vue-barcode-reader)
 
 A Vue.js set of components to scan (or upload images) barcodes and QR codes.
 
 ## Enhancements in this fork
 
-* Fixes ZXing library version issue causing scanning to be very slow
-* On startup, the library searches all available rear-facing cameras to find the most ideal camera for barcode scanning, preferrably one with torch (flash) and autofocus.
-* Adds the ability to activate the torch (camera flash), which can yield higher barcode scanning speed and accuracy.
-* Ability to set orientation to landscape mode, this can also increase the scanning speed and accuracy as there's more pixels in the landscape orientation.
-* Ability to control the camera zoom (if camera device reports the user is allowed to set the zoom).
-* Ability to switch between autofocus and manual focus mode (defaults to autofocus mode if available).
-* Ability to set the focus distance (if in manual focus mode and camera device supports the feature).
+* Fixes ZXing library version issue causing scanning to be very slow.
+* On startup, the library searches all available rear-facing cameras to find the most ideal camera for barcode scanning, preferably one with torch (flash) and autofocus.  It also saves this ideal camera to local storage for faster startup on repeat scans.
+* Adds option to activate the torch (camera flash), which can yield higher barcode scanning speed and accuracy.
+* Adds option to cycle through the available cameras (if more than one camera is available).
+* Adds option to set orientation to landscape mode, this can also increase the scanning speed and accuracy as there's more pixels in the landscape orientation.
+* Adds option to control the camera zoom (if camera device reports the user is allowed to set the zoom).
+* Adds option to switch between autofocus and manual focus mode (defaults to autofocus mode if available).
+* Adds option to set the focus distance (if in manual focus mode and camera device supports the feature).
 
 ## Benefits
 
@@ -21,9 +22,7 @@ A Vue.js set of components to scan (or upload images) barcodes and QR codes.
 
 ## Demo
 
-TODO: Update demos adding new features
-
-[Demo repository](https://github.com/olefirenko/vue-barcode-reader-example) | [Codesandbox](https://codesandbox.io/s/vue-barcode-reader-demo-guj3f) | [Vercel](https://vue-barcode-reader-example-2iiz1fhbf-olefirenko.vercel.app/) | [Netlify](https://stupefied-meitner-58f299.netlify.app/)
+[Demo](https://barcode.leethost.com) | [Demo repository](https://github.com/teckel12/vue-barcode-reader-example)
 
 ## Installation
 
@@ -106,6 +105,10 @@ Defaults to `true`, but setting `:autofocus="false"` turns off autofocus (manual
 
 Set the focus distance (min/max/step available in `hasFocusDistance` emited value).
 
+### deviceIndex
+
+Select the index of the camera device to use (get the camera device array from the `videoDevices` emitted value).
+
 
 ## Emitted values
 
@@ -124,6 +127,14 @@ Returns `false` or object containing `min`, `max`, `step` set from the supported
 ### hasFocusDistance
 
 Returns `false` or object containing `min`, `max`, `step` set from the supported camera decice.
+
+### videoDevices
+
+Returns an array of camera devices available to the browser (can be used to select the desired camera device via `deviceIndex` prop).
+
+### cameraDetails
+
+Dump of the camera device details (useful for debugging).
 
 
 ## Events

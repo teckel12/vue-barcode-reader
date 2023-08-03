@@ -7,6 +7,7 @@
         <div class="laser-inner"></div>
       </div>
     </div>
+    <!--<pre>{{ cameraDetails }}</pre>-->
   </div>
 </template>
 
@@ -15,7 +16,7 @@ import { BrowserMultiFormatReader, Exception } from '@zxing/library'
 
 export default {
   name: 'stream-barcode-reader',
-  emits: ['loaded', 'decode', 'result', 'update:hasTorch', 'update:hasZoom', 'update:hasAutofocus', 'update:hasFocusDistance'],
+  emits: ['loaded', 'decode', 'result', 'update:hasTorch', 'update:hasZoom', 'update:hasAutofocus', 'update:hasFocusDistance', 'update:videoDevices', 'update:cameraDetails'],
 
   props: {
     torch: {
@@ -38,11 +39,17 @@ export default {
       type: Boolean,
       default: false,
     },
+    deviceIndex: {
+      type: Number,
+      default: 0,
+    },
   },
 
   data() {
     return {
       idealDevice: {},
+      cameraDetails: {},
+      videoDevices: [],
       isLoading: true,
       codeReader: new BrowserMultiFormatReader(),
       isMediaStreamAPISupported: navigator && navigator.mediaDevices && 'enumerateDevices' in navigator.mediaDevices,
@@ -92,6 +99,19 @@ export default {
         this.exitFullscreenLandscape()
       }
     },
+    deviceIndex() {
+      if (this.deviceIndex != this.videoDevices.selectedIndex && this.deviceIndex == Number(this.deviceIndex) && this.videoDevices?.devices?.length > 1) {
+        this.cameraDetails = {}
+        this.cameraDetails.previousDevice = this.idealDevice
+        const deviceId = this.videoDevices?.devices[this.deviceIndex]?.deviceId
+        this.codeReader.reset()
+        navigator.mediaDevices.enumerateDevices().then(devices => {
+          this.findIdealDevice(devices, deviceId).then(() => {
+            this.selectCamera()
+          })
+        })
+      }
+    },
   },
 
   mounted() {
@@ -101,6 +121,7 @@ export default {
     }
 
     this.idealDevice = JSON.parse(localStorage.getItem('vue-barcode-reader-ideal') || '{}')
+    this.cameraDetails.previousDevice = this.idealDevice
 
     if (this.landscape) {
       this.fullscreenLandscape()
@@ -127,18 +148,42 @@ export default {
   },
 
   methods: {
-    async findIdealDevice(devices) {
+    async findIdealDevice(devices, deviceId = false) {
       let deviceOptions = []
-      const cameras = devices.filter((device) => device.kind === 'videoinput' && device.label.toLowerCase().indexOf('front') === -1)
+      let cameras = []
+      if (deviceId) {
+        // Specific camera device specified, use this camera if it exists
+        this.isLoading = true
+        cameras = devices.filter((device) => device.kind === 'videoinput' && device.deviceId === deviceId)
+        if (cameras?.length !== 1) {
+          cameras = devices.filter((device) => device.kind === 'videoinput' && device.label.toLowerCase().indexOf('front') === -1)
+        }
+      } else {
+        //cameras = devices.filter((device) => device.kind === 'videoinput' && device.label.toLowerCase().indexOf('front') === -1)
+        cameras = devices.filter((device) => device.kind === 'videoinput')
+      }
+      this.cameraDetails.requestedDeviceId = deviceId
+      this.cameraDetails.cameras = devices.filter(device => device.kind === 'videoinput')
+      this.cameraDetails.filteredCameras = cameras
+      this.cameraDetails.constraints = []
       for (let index = 0; index < cameras.length; index++) {
-        await navigator.mediaDevices.getUserMedia(
-          {
-            video: {
-              deviceId: {
-                exact: cameras[index].deviceId,
-              },
+        const constraints = { video: true }
+        if (deviceId) {
+          constraints.video = {
+            deviceId: {
+              exact: cameras[index].deviceId,
             }
-          })
+          }
+        } else {
+          constraints.video = { facingMode: 'environment' }
+          if (cameras[index].deviceId) {
+            constraints.video.deviceId = {
+              exact: cameras[index].deviceId,
+            }
+          }
+        }
+        this.cameraDetails.constraints.push(constraints)
+        await navigator.mediaDevices.getUserMedia(constraints)
           .then(stream => {
             const track = stream.getVideoTracks()[0]
             const trackCapabilities = track.getCapabilities()
@@ -149,6 +194,8 @@ export default {
           .catch(() => { return false })
       }
 
+      this.cameraDetails.deviceOptions = deviceOptions
+
       if (deviceOptions.length > 0) {
         // If rear facing (environment) camera(s), use only those
         const environmentFacing = deviceOptions.filter(device => device.facingMode.includes('environment'))
@@ -157,7 +204,7 @@ export default {
         }
 
         // Find ideal device (hopefully includes torch and continuous focus)
-        let idealIndex = deviceOptions.length -1
+        let idealIndex = deviceOptions.length - 1
         for (let index = 0; index < deviceOptions.length; index++) {
           if (deviceOptions[index].torch && deviceOptions[index].focusMode.includes('continuous')) {
             idealIndex = index
@@ -171,7 +218,6 @@ export default {
         localStorage.setItem('vue-barcode-reader-ideal', JSON.stringify(deviceOptions[idealIndex]))
         return true
       } else {
-        localStorage.removeItem('vue-barcode-reader-ideal')
         return false
       }
     },
@@ -193,27 +239,39 @@ export default {
     },
 
     selectCamera() {
-      // Make sure the ideal device we found is available with the code reader (it should always be, but just in case...)
+      // Make sure the ideal device we found is available with the code reader (if not, do a search)
       this.codeReader.listVideoInputDevices().then((videoInputDevices) => {
+        this.videoDevices = { devices: videoInputDevices }
         if (videoInputDevices.findIndex(device => device.deviceId === this.idealDevice.deviceId) === -1) {
           this.idealDevice = {}
           localStorage.removeItem('vue-barcode-reader-ideal')
+          navigator.mediaDevices.enumerateDevices().then(devices => {
+            this.findIdealDevice(devices).then(() => {
+              this.selectCamera()
+            })
+          })
+          return
         }
 
         // Now start the barcode reader
         this.startCodeReader(this.idealDevice.deviceId)
         this.$refs.scanner.oncanplay = (event) => {
           this.isLoading = false
+          this.videoDevices.selectedId = this.idealDevice.deviceId
+          this.videoDevices.selectedIndex = this.videoDevices?.devices?.findIndex(device => device.deviceId === this.idealDevice.deviceId)
+          this.cameraDetails.videoDevices = this.videoDevices.devices
+          this.cameraDetails.selectedIndex = this.videoDevices.selectedIndex
+          this.cameraDetails.selectedDeviceId = this.idealDevice.deviceId
+          this.cameraDetails.selectedDevice = this.idealDevice
           this.$emit('loaded')
           this.$emit('update:hasTorch', this.hasTorch)
           this.$emit('update:hasZoom', this.hasZoom)
           this.$emit('update:hasAutofocus', this.hasAutofocus)
           this.$emit('update:hasFocusDistance', this.hasFocusDistance)
+          this.$emit('update:videoDevices', this.videoDevices)
 
-          // Finally, turn on features as available and requested
           this.applyCameraConstraints()
         }
-
       })
     },
 
@@ -221,8 +279,10 @@ export default {
       const advanced = {}
       if (this.hasTorch) advanced.torch = this.torch
       if (this.hasZoom) advanced.zoom = Math.min(Math.max(this.idealDevice.zoom.min, this.zoom), this.idealDevice.zoom.max)
-      if (this.hasAutofocus) advanced.focusMode = this.autofocus ? 'continuous' : 'manual'
+      if (this.hasAutofocus || (!this.hasAutofocus && !this.autofocus)) advanced.focusMode = this.autofocus ? 'continuous' : 'manual'
       if (!this.autofocus && this.hasFocusDistance) advanced.focusDistance = Math.min(Math.max(this.idealDevice.focusDistance.min, this.focusDistance), this.idealDevice.focusDistance.max)
+      this.cameraDetails.applyConstraints = advanced
+      this.$emit('update:cameraDetails', this.cameraDetails)
       this.$refs.scanner?.srcObject?.getVideoTracks()[0]?.applyConstraints({
         advanced: [advanced]
       }).catch(() => {})
@@ -245,12 +305,25 @@ export default {
   position: relative;
 }
 
+.scanner-container pre {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  color: #ccc;
+  background-color: rgba(0, 0, 0, 0.25);
+  text-align: left;
+  overflow-y: scroll;
+}
+
 video {
   display: block;
   width: 100%;
   height: auto;
   max-width: 100vw;
-  max-height: 100vh;
+  margin: auto;
 }
 
 .overlay-element {
