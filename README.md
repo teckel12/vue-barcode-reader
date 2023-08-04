@@ -58,7 +58,20 @@ import { StreamBarcodeReader } from "@teckel/vue-barcode-reader";
 In your template you can use this syntax:
 
 ```html
-<StreamBarcodeReader @decode="onDecode" @loaded="onLoaded" torch></StreamBarcodeReader>
+<StreamBarcodeReader
+    torch
+    no-front-cameras
+    @decode="onDecode"
+    @loaded="onLoaded"
+/>
+```
+
+```js
+methods: {
+    onDecode (result) {
+        console.log(result)
+    }
+}
 ```
 
 ### Scanning from Image
@@ -66,93 +79,89 @@ In your template you can use this syntax:
 The component renders to a simple file picker input element. Clicking opens a file dialog. On supporting mobile devices the camera is started to take a picture. The selected images are directly scanned and positive results are indicated by the `decode` event.
 
 ```js
-import { ImageBarcodeReader } from "vue-barcode-reader";
+import { ImageBarcodeReader } from "@teckel/vue-barcode-reader";
 ```
 
 In your template you can use this syntax:
 
 ```html
-<ImageBarcodeReader @decode="onDecode" @error="onError"></ImageBarcodeReader>
+<ImageBarcodeReader
+    @decode="onDecode"
+    @error="onError"
+/>
 ```
-
-```html
-methods: { onDecode (result) { console.log(result) } }
-```
-
 
 ## Props
 
 > Props will only work if the camera reports that the feature is supported.  Some camera devices and some platforms either don't allow setting constraints or don't report the feature exists.  Chrome on Android work quite well, while (as expected) iOS and Safari don't support most/all features.
 
-### torch
+### `torch`
 
 Activate the torch (flash). Can be set with simply `torch` or controlled via `:torch="torch"`.
 
-### zoom
+### `zoom`
 
 Set the zoom value (min/max/step available in `hasZoom` emitted value).
 
-### landscape
+### `landscape`
 
 Set the browser to landscape orientation.  In order to set landscape mode, the browser will first switch to fullscreen mode (this is required to force landscape mode).
 
-### autofocus
+### `autofocus`
 
 Defaults to `true`, but setting `:autofocus="false"` turns off autofocus (manual focus).
 
-### focus-distance
+### `focus-distance`
 
 > Must have `:autofocus="false"` (turning off autofocus and turning on manual focus) for focus-distance to work.
 
 Set the focus distance (min/max/step available in `hasFocusDistance` emitted value).
 
-### no-front-cameras
+### `no-front-cameras`
 
 Only selects from rear-facing cameras.  This only works if the device reports the camera's orientation.
 
-### device-index
+### `device-index`
 
 Select the index of the camera device to use (get the camera device array from the `videoDevices` emitted value).
 
-
 ## Emitted values
 
-### hasTorch
+### `hasTorch`
 
 Returns `true` or `false` if camera device reports it's capable of activating the torch (flash).
 
-### hasAutofocus
+### `hasAutofocus`
 
 Returns `true` or `false` if camera device reports it's capable of autofocus mode.
 
-### hasZoom
+### `hasZoom`
 
 Returns `false` or object containing `min`, `max`, `step` set from the supported camera decice.
 
-### hasFocusDistance
+### `hasFocusDistance`
 
 Returns `false` or object containing `min`, `max`, `step` set from the supported camera decice.
 
-### videoDevices
+### `videoDevices`
 
 Returns an array of camera devices available to the browser (can be used to select the desired camera device via `device-index` prop).
 
-### cameraDetails
+### `cameraDetails`
 
 Object dump of the library processing to select the ideal camera, switch cameras, and apply constraints (useful for debugging or could be used for enhanced features).
 
-
 ## Events
 
-### loaded
+### `loaded`
 
 When the libraty is loaded and the camera is ready to scan
 
-### decode
+### `decode`
 
 When a barcode or QR code is scanned. The result is passed as a parameter to the event handler. The result is the text encoded in the barcode or QR code.
 
-### result
+### `result`
 
 When a barcode or QR code is scanned. The result is passed as a parameter to the event handler. Below is an example result object from the UPC code of a box of Kellogg's Frosted Mini-Wheats:
 
