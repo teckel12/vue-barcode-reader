@@ -103,7 +103,11 @@ Defaults to `true`, but setting `:autofocus="false"` turns off autofocus (manual
 
 > Must have `:autofocus="false"` (turning off autofocus and turning on manual focus) for focusDistance to work.
 
-Set the focus distance (min/max/step available in `hasFocusDistance` emited value).
+Set the focus distance (min/max/step available in `hasFocusDistance` emitted value).
+
+### noFrontCameras
+
+Only selects from rear-facing cameras.  This only works if the device reports the camera's orientation.
 
 ### deviceIndex
 
