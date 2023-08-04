@@ -14,6 +14,7 @@ A Vue.js set of components to scan (or upload images) barcodes and QR codes.
 * Adds option to control the camera zoom (if camera device reports the user is allowed to set the zoom).
 * Adds option to switch between autofocus and manual focus mode (defaults to autofocus mode if available).
 * Adds option to set the focus distance (if in manual focus mode and camera device supports the feature).
+* Adds option to only select from rear-facing cameras (you probably want only rear-facing cameras when scanning barcodes).
 
 ## Benefits
 
