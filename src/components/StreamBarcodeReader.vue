@@ -43,6 +43,10 @@ export default {
       type: Number,
       default: 0,
     },
+    noFrontCameras: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -101,10 +105,11 @@ export default {
     },
     deviceIndex() {
       if (this.deviceIndex != this.videoDevices.selectedIndex && this.deviceIndex == Number(this.deviceIndex) && this.videoDevices?.devices?.length > 1) {
+        this.isLoading = true
+        this.codeReader.reset()
         this.cameraDetails = {}
         this.cameraDetails.previousDevice = this.idealDevice
         const deviceId = this.videoDevices?.devices[this.deviceIndex]?.deviceId
-        this.codeReader.reset()
         navigator.mediaDevices.enumerateDevices().then(devices => {
           this.findIdealDevice(devices, deviceId).then(() => {
             this.selectCamera()
@@ -153,14 +158,14 @@ export default {
       let cameras = []
       if (deviceId) {
         // Specific camera device specified, use this camera if it exists
-        this.isLoading = true
         cameras = devices.filter((device) => device.kind === 'videoinput' && device.deviceId === deviceId)
-        if (cameras?.length !== 1) {
-          cameras = devices.filter((device) => device.kind === 'videoinput' && device.label.toLowerCase().indexOf('front') === -1)
+      }
+      if (cameras?.length !== 1) {
+        // Filter for the ideal camera
+        cameras = devices.filter((device) => device.kind === 'videoinput' && device.label.toLowerCase().indexOf('front') === -1)
+        if (cameras?.length === 0) {
+          cameras = devices.filter((device) => device.kind === 'videoinput')
         }
-      } else {
-        //cameras = devices.filter((device) => device.kind === 'videoinput' && device.label.toLowerCase().indexOf('front') === -1)
-        cameras = devices.filter((device) => device.kind === 'videoinput')
       }
       this.cameraDetails.requestedDeviceId = deviceId
       this.cameraDetails.cameras = devices.filter(device => device.kind === 'videoinput')
@@ -241,6 +246,9 @@ export default {
     selectCamera() {
       // Make sure the ideal device we found is available with the code reader (if not, do a search)
       this.codeReader.listVideoInputDevices().then((videoInputDevices) => {
+        if (this.noFrontCameras) {
+          videoInputDevices = videoInputDevices.filter(device => device.label.toLowerCase().indexOf('front') === -1)
+        }
         this.videoDevices = { devices: videoInputDevices }
         if (videoInputDevices.findIndex(device => device.deviceId === this.idealDevice.deviceId) === -1) {
           this.idealDevice = {}
@@ -320,9 +328,6 @@ export default {
 
 video {
   display: block;
-  width: 100%;
-  height: auto;
-  max-width: 100vw;
   margin: auto;
 }
 
@@ -333,6 +338,27 @@ video {
   height: 100%;
   background: rgba(30, 30, 30, 0.5);
   clip-path: polygon(0% 0%, 0% 100%, 20% 100%, 20% 20%, 80% 20%, 80% 80%, 20% 80%, 20% 100%, 100% 100%, 100% 0%);
+}
+
+@media screen and (orientation:portrait) {
+  video {
+    height: 100%;
+    min-height: 100vh;
+    width: auto;
+  }
+  .overlay-element {
+    min-height: 100vh;
+  }
+}
+@media screen and (orientation:landscape) {
+  video {
+    width: 100%;
+    min-width: 100vw;
+    height: auto;
+  }
+  .overlay-element {
+    min-width: 100vw;
+  }
 }
 
 .laser {
