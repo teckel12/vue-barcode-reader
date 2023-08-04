@@ -100,17 +100,17 @@ Set the browser to landscape orientation.  In order to set landscape mode, the b
 
 Defaults to `true`, but setting `:autofocus="false"` turns off autofocus (manual focus).
 
-### focusDistance
+### focus-distance
 
-> Must have `:autofocus="false"` (turning off autofocus and turning on manual focus) for focusDistance to work.
+> Must have `:autofocus="false"` (turning off autofocus and turning on manual focus) for focus-distance to work.
 
 Set the focus distance (min/max/step available in `hasFocusDistance` emitted value).
 
-### noFrontCameras
+### no-front-cameras
 
 Only selects from rear-facing cameras.  This only works if the device reports the camera's orientation.
 
-### deviceIndex
+### device-index
 
 Select the index of the camera device to use (get the camera device array from the `videoDevices` emitted value).
 
@@ -135,11 +135,11 @@ Returns `false` or object containing `min`, `max`, `step` set from the supported
 
 ### videoDevices
 
-Returns an array of camera devices available to the browser (can be used to select the desired camera device via `deviceIndex` prop).
+Returns an array of camera devices available to the browser (can be used to select the desired camera device via `device-index` prop).
 
 ### cameraDetails
 
-Dump of the camera device details (useful for debugging).
+Object dump of the library processing to select the ideal camera, switch cameras, and apply constraints (useful for debugging or could be used for enhanced features).
 
 
 ## Events
