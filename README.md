@@ -18,8 +18,8 @@ A Vue.js set of components to scan (or upload images) barcodes and QR codes.
 
 ## Benefits
 
-- Can scan both barcodes and QR codes
-- Uses [ZXing](https://github.com/zxing-js/library) ("zebra crossing"), an open-source, multi-format 1D/2D barcode image processing library implemented in Java, with ports to other languages.
+* Can scan both barcodes and QR codes
+* Uses [ZXing](https://github.com/zxing-js/library) ("zebra crossing"), an open-source, multi-format 1D/2D barcode image processing library implemented in Java, with ports to other languages.
 
 ## Demo
 
@@ -165,7 +165,7 @@ When a barcode or QR code is scanned. The result is passed as a parameter to the
 
 When a barcode or QR code is scanned. The result is passed as a parameter to the event handler. Below is an example result object from the UPC code of a box of Kellogg's Frosted Mini-Wheats:
 
-```
+```json
 {
     "text": "038000199349",
     "rawBytes": null,
