@@ -342,22 +342,16 @@ video {
 
 @media screen and (orientation:portrait) {
   video {
-    height: 100%;
-    min-height: 100vh;
-    width: auto;
-  }
-  .overlay-element {
-    min-height: 100vh;
+    width: 100%;
+    max-width: 100vh;
+    height: auto;
   }
 }
 @media screen and (orientation:landscape) {
   video {
-    width: 100%;
-    min-width: 100vw;
-    height: auto;
-  }
-  .overlay-element {
-    min-width: 100vw;
+    height: 100%;
+    max-height: 100vh;
+    width: auto;
   }
 }
 
