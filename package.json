@@ -1,6 +1,6 @@
 {
   "name": "@teckel/vue-barcode-reader",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Vue barcode and QR code scanner",
   "main": "src/index.js",
   "scripts": {
