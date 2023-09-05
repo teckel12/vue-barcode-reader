@@ -1,10 +1,8 @@
 # Vue Barcode and QR code scanner
 
-[![npm version](https://badgen.net/npm/v/@teckel/vue-barcode-reader)](https://www.npmjs.com/package/@teckel/vue-barcode-reader)
-
 A Vue.js set of components to scan (or upload images) barcodes and QR codes.
 
-## Enhancements in this fork
+## Enhancements
 
 * Fixes ZXing library version issue causing scanning to be very slow.
 * On startup, the library searches all available rear-facing cameras to find the most ideal camera for barcode scanning, preferably one with torch (flash) and autofocus.  It also saves this ideal camera to local storage for faster startup on repeat scans.
@@ -185,3 +183,22 @@ When a barcode or QR code is scanned. The result is passed as a parameter to the
     "resultMetadata": null
 }
 ```
+
+Barcode formats:
+* 0 AZTEC,
+* 1 CODABAR,
+* 2 CODE_39,
+* 3 CODE_93,
+* 4 CODE_128,
+* 5 DATA_MATRIX,
+* 6 EAN_8,
+* 7 EAN_13,
+* 8 ITF,
+* 9 MAXICODE,
+* 10 PDF_417,
+* 11 QR_CODE,
+* 12 RSS_14,
+* 13 RSS_EXPANDED,
+* 14 UPC_A,
+* 15 UPC_E,
+* 16 UPC_EAN_EXTENSION

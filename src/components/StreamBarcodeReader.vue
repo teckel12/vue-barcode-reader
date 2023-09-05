@@ -287,7 +287,7 @@ export default {
       const advanced = {}
       if (this.hasTorch) advanced.torch = this.torch
       if (this.hasZoom) advanced.zoom = Math.min(Math.max(this.idealDevice.zoom.min, this.zoom), this.idealDevice.zoom.max)
-      if (this.hasAutofocus || (!this.hasAutofocus && !this.autofocus)) advanced.focusMode = this.autofocus ? 'continuous' : 'manual'
+      if (this.hasAutofocus || (!this.hasAutofocus && !this.autofocus && this.hasFocusDistance)) advanced.focusMode = this.autofocus ? 'continuous' : 'manual'
       if (!this.autofocus && this.hasFocusDistance) advanced.focusDistance = Math.min(Math.max(this.idealDevice.focusDistance.min, this.focusDistance), this.idealDevice.focusDistance.max)
       this.cameraDetails.applyConstraints = advanced
       this.$emit('update:cameraDetails', this.cameraDetails)
