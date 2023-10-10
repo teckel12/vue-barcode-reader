@@ -203,7 +203,7 @@ export default {
 
       if (deviceOptions.length > 0) {
         // If rear facing (environment) camera(s), use only those
-        const environmentFacing = deviceOptions.filter(device => device.facingMode.includes('environment'))
+        const environmentFacing = deviceOptions.filter(device => device.facingMode?.includes('environment'))
         if (environmentFacing.length > 0) {
           deviceOptions = environmentFacing
         }
