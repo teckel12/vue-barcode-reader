@@ -191,7 +191,10 @@ export default {
         await navigator.mediaDevices.getUserMedia(constraints)
           .then(stream => {
             const track = stream.getVideoTracks()[0]
-            const trackCapabilities = track.getCapabilities()
+            const trackCapabilities = {
+              deviceId: cameras[index].deviceId,
+              ...track.getCapabilities?.() ?? {}
+            }
             deviceOptions.push(trackCapabilities)
             stream.getTracks().forEach(track => { track.stop() })
             return true
