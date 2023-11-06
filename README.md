@@ -13,6 +13,7 @@ A Vue.js set of components to scan (or upload images) barcodes and QR codes.
 * Adds option to switch between autofocus and manual focus mode (defaults to autofocus mode if available).
 * Adds option to set the focus distance (if in manual focus mode and camera device supports the feature).
 * Adds option to only select from rear-facing cameras (you probably want only rear-facing cameras when scanning barcodes).
+* Adds option to control the time between decode scans (defaults to 500ms).
 
 ## Benefits
 
@@ -123,6 +124,10 @@ Only selects from rear-facing cameras.  This only works if the device reports th
 
 Select the index of the camera device to use (get the camera device array from the `videoDevices` emitted value).
 
+### `msBetweenDecoding`
+
+Set the time between decode scans (defaults to 500ms).  This is useful if you want to limit the number of scans per second (for example, if you're scanning a barcode on a moving object, you may want to limit the number of scans per second).
+
 ## Emitted values
 
 ### `hasTorch`
@@ -135,11 +140,11 @@ Returns `true` or `false` if camera device reports it's capable of autofocus mod
 
 ### `hasZoom`
 
-Returns `false` or object containing `min`, `max`, `step` set from the supported camera decice.
+Returns `false` or object containing `min`, `max`, `step` set from the supported camera device.
 
 ### `hasFocusDistance`
 
-Returns `false` or object containing `min`, `max`, `step` set from the supported camera decice.
+Returns `false` or object containing `min`, `max`, `step` set from the supported camera device.
 
 ### `videoDevices`
 
@@ -153,7 +158,7 @@ Object dump of the library processing to select the ideal camera, switch cameras
 
 ### `loaded`
 
-When the libraty is loaded and the camera is ready to scan
+When the library is loaded and the camera is ready to scan
 
 ### `decode`
 
@@ -185,6 +190,7 @@ When a barcode or QR code is scanned. The result is passed as a parameter to the
 ```
 
 Barcode formats:
+
 * 0 AZTEC,
 * 1 CODABAR,
 * 2 CODE_39,

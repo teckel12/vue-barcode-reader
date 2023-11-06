@@ -47,6 +47,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    msBetweenDecoding: {
+      type: Number,
+      default: 500,
+    },
   },
 
   data() {
@@ -300,6 +304,7 @@ export default {
     },
 
     startCodeReader(deviceId) {
+      this.codeReader.timeBetweenDecodingAttempts = this.msBetweenDecoding
       this.codeReader.decodeFromVideoDevice(deviceId, this.$refs.scanner, (result, err) => {
         if (result) {
           this.$emit('decode', result.text)
