@@ -319,6 +319,8 @@ export default {
 <style scoped>
 .scanner-container {
   position: relative;
+  max-width: fit-content;
+  margin: 0 auto;
 }
 
 .scanner-container pre {

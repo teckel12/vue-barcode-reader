@@ -1,18 +1,20 @@
-# Vue Barcode and QR code scanner
+# Vue 3 Barcode and QR Code Scanner
 
-A Vue.js set of components to scan (or upload images) barcodes and QR codes.
+A Vue.js set of components to scan barcodes and QR codes (or upload images).
 
 ## Enhancements
 
-* Fixes ZXing library version issue causing scanning to be very slow.
+> Offers the following bug fixes, features & improvements over the original (abandoned?) package by [olefirenko](https://github.com/olefirenko/vue-barcode-reader):
+
+* Fixes ZXing library version issue which greatly increases scanning speed.
 * On startup, the library searches all available rear-facing cameras to find the most ideal camera for barcode scanning, preferably one with torch (flash) and autofocus.  It also saves this ideal camera to local storage for faster startup on repeat scans.
-* Adds option to activate the torch (camera flash), which can yield higher barcode scanning speed and accuracy.
+* Adds option to activate the torch (camera flash), which can yield higher barcode scanning speed and accuracy (Android only).
 * Adds option to cycle through the available cameras (if more than one camera is available).
-* Adds option to set orientation to landscape mode, this can also increase the scanning speed and accuracy as there's more pixels in the landscape orientation.
+* Adds option to set orientation to landscape mode, this can also increase the scanning speed and accuracy as there's more horizontal pixels in the landscape orientation.
 * Adds option to control the camera zoom (if camera device reports the user is allowed to set the zoom).
 * Adds option to switch between autofocus and manual focus mode (defaults to autofocus mode if available).
 * Adds option to set the focus distance (if in manual focus mode and camera device supports the feature).
-* Adds option to only select from rear-facing cameras (you probably want only rear-facing cameras when scanning barcodes).
+* Adds option to only select from rear-facing cameras (you probably only want rear-facing cameras when scanning barcodes).
 * Adds option to control the time between decode scans (defaults to 500ms).
 
 ## Benefits
@@ -26,7 +28,7 @@ A Vue.js set of components to scan (or upload images) barcodes and QR codes.
 
 ## Installation
 
-The easiest way to use Vue Barcode Reader is to install it from **npm** or **yarn**.
+The easiest way to use Vue Barcode Reader is to install it with **npm** or **yarn**.
 
 ```sh
 npm install @teckel/vue-barcode-reader --save
@@ -38,39 +40,76 @@ Or
 yarn add @teckel/vue-barcode-reader
 ```
 
-### Vue 2.0 support
-
-For Vue 2.0 compatible version please use the `vue-barcode-reader@0.0.3`.
-
 ## Usage
 
 The Vue Barcode Reader works out of the box by just including it.
 
-### Using Video Camera
+### Scanning from Video Camera
 
 Once a stream from the users camera is loaded, it's displayed and continuously scanned for barcodes. Results are indicated by the decode event.
 
+Composition API example:
+
 ```js
-import { StreamBarcodeReader } from "@teckel/vue-barcode-reader";
-```
+<script setup>
+import { ref } from 'vue'
+import { StreamBarcodeReader } from '@teckel/vue-barcode-reader'
 
-In your template you can use this syntax:
+const decodedText = ref('')
 
-```html
-<StreamBarcodeReader
+const onDecode = (result) => {
+  decodedText = result
+}
+
+const onLoaded = () => {
+  console.log('loaded')
+}
+</script>
+
+<template>
+  <StreamBarcodeReader
     torch
     no-front-cameras
     @decode="onDecode"
     @loaded="onLoaded"
-/>
+  />
+  <h2>Decoded value: {{ decodedText }}</h2>
+</template>
 ```
 
+Options API example:
+
 ```js
-methods: {
-    onDecode (result) {
-        console.log(result)
+<template>
+  <StreamBarcodeReader
+    torch
+    no-front-cameras
+    @decode="onDecode"
+    @loaded="onLoaded"
+  />
+  <h2>Decoded value: {{ decodedText }}</h2>
+</template>
+
+<script>
+import { StreamBarcodeReader } from '@teckel/vue-barcode-reader'
+
+export default {
+  components: { StreamBarcodeReader },
+  data() {
+    return {
+      decodedText: '',
     }
+  },
+  methods: {
+    onDecode(result) {
+      this.decodedText = result
+    },
+    onLoaded() {
+      console.log('loaded')
+    },
+  }
 }
+</script>
 ```
 
 ### Scanning from Image
@@ -78,15 +117,15 @@ methods: {
 The component renders to a simple file picker input element. Clicking opens a file dialog. On supporting mobile devices the camera is started to take a picture. The selected images are directly scanned and positive results are indicated by the `decode` event.
 
 ```js
-import { ImageBarcodeReader } from "@teckel/vue-barcode-reader";
+import { ImageBarcodeReader } from '@teckel/vue-barcode-reader'
 ```
 
 In your template you can use this syntax:
 
 ```html
 <ImageBarcodeReader
-    @decode="onDecode"
-    @error="onError"
+  @decode="onDecode"
+  @error="onError"
 />
 ```
 
