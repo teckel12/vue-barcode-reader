@@ -218,7 +218,7 @@ export default {
         // Find ideal device (hopefully includes torch and continuous focus)
         let idealIndex = deviceOptions.length - 1
         for (let index = 0; index < deviceOptions.length; index++) {
-          if (deviceOptions[index].torch && deviceOptions[index].focusMode.includes('continuous')) {
+          if (deviceOptions[index].torch && deviceOptions[index].focusMode?.includes('continuous')) {
             idealIndex = index
             break
           } else if (deviceOptions[index].torch) {
