@@ -4,7 +4,7 @@ A Vue.js set of components to scan barcodes and QR codes (or upload images).
 
 ## Enhancements
 
-> Offers the following bug fixes, features & improvements over the original (abandoned?) package by [olefirenko](https://github.com/olefirenko/vue-barcode-reader):
+> Offers the following bug fixes, features & improvements over the abandoned package by [olefirenko](https://github.com/olefirenko/vue-barcode-reader):
 
 * Fixes ZXing library version issue which greatly increases scanning speed.
 * On startup, the library searches all available rear-facing cameras to find the most ideal camera for barcode scanning, preferably one with torch (flash) and autofocus.  It also saves this ideal camera to local storage for faster startup on repeat scans.
