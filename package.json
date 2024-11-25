@@ -40,7 +40,7 @@
   },
   "homepage": "https://github.com/teckel12/vue-barcode-reader#readme",
   "dependencies": {
-    "@zxing/library": "^0.20.0"
+    "@zxing/library": "^0.21.3"
   },
   "devDependencies": {}
 }

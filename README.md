@@ -1,4 +1,4 @@
-# Vue 3 Barcode and QR Code Scanner
+# Vue 3 Barcode and QR Code Camera Scanner and Image Reader
 
 A Vue.js set of components to scan barcodes and QR codes (or upload images).
 
@@ -6,8 +6,8 @@ A Vue.js set of components to scan barcodes and QR codes (or upload images).
 
 > The following bug fixes, features & improvements over the abandoned package by [olefirenko](https://github.com/olefirenko/vue-barcode-reader)
 
-* Fixes ZXing library version issue which greatly increases scanning speed.
-* On startup, the library searches all available rear-facing cameras to find the most ideal camera for barcode scanning, preferably one with torch (flash) and autofocus.  It also saves this ideal camera to local storage for faster startup on repeat scans.
+* Uses latest version of the ZXing library which greatly increases scanning speed and compatibility.
+* On startup, searches all available rear-facing cameras to find the most ideal camera for barcode scanning, preferably one with torch (flash) and autofocus.  Also saves this ideal camera to local storage for faster startup on repeat scans.
 * Adds option to activate the torch (camera flash), which can yield higher barcode scanning speed and accuracy (Android only).
 * Adds option to cycle through the available cameras (if more than one camera is available).
 * Adds option to set orientation to landscape mode, this can also increase the scanning speed and accuracy as there's more horizontal pixels in the landscape orientation.
@@ -19,7 +19,7 @@ A Vue.js set of components to scan barcodes and QR codes (or upload images).
 
 ## Benefits
 
-* Can scan both barcodes and QR codes
+* Scans multiple 1D barcode formats and 2D QR Codes.
 * Uses [ZXing](https://github.com/zxing-js/library) ("zebra crossing"), an open-source, multi-format 1D/2D barcode image processing library implemented in Java, with ports to other languages.
 
 ## Demo
@@ -228,22 +228,22 @@ When a barcode or QR code is scanned. The result is passed as a parameter to the
 }
 ```
 
-Barcode formats:
+Barcode formats (from above JSON object `format`):
 
-* 0 AZTEC,
-* 1 CODABAR,
-* 2 CODE_39,
-* 3 CODE_93,
-* 4 CODE_128,
-* 5 DATA_MATRIX,
-* 6 EAN_8,
-* 7 EAN_13,
-* 8 ITF,
-* 9 MAXICODE,
-* 10 PDF_417,
-* 11 QR_CODE,
-* 12 RSS_14,
-* 13 RSS_EXPANDED,
-* 14 UPC_A,
-* 15 UPC_E,
-* 16 UPC_EAN_EXTENSION
+* 0 Aztec
+* 1 Codabar
+* 2 Code 39
+* 3 Code 93
+* 4 Code 128
+* 5 Data Matrix
+* 6 EAN-8
+* 7 EAN-13
+* 8 ITF
+* ~~9 MaxiCode~~ (not supported)
+* 10 PDF 417
+* 11 QR Code
+* 12 RSS-14
+* ~~13 RSS-Expanded~~ (not supported)
+* 14 UPC-A
+* 15 UPC-E
+* 16 UPC-EAN Extension
